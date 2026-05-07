@@ -5,6 +5,16 @@ use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
 
+if (isset($_SERVER['VERCEL_URL'])) {
+    $storagePath = '/tmp/storage';
+    if (!is_dir($storagePath)) {
+        mkdir($storagePath . '/framework/views', 0755, true);
+        mkdir($storagePath . '/framework/sessions', 0755, true);
+        mkdir($storagePath . '/framework/cache', 0755, true);
+        mkdir($storagePath . '/bootstrap/cache', 0755, true);
+    }
+}
+
 // Determine if the application is in maintenance mode...
 if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {
     require $maintenance;
