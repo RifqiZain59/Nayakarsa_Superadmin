@@ -30,10 +30,7 @@ Route::middleware('auth')->group(function () {
     
     Route::prefix('superadmin')->name('superadmin.')->middleware('superadmin')->group(function () {
         Route::get('/dashboard', [SuperadminController::class, 'dashboard'])->name('dashboard');
-        
-        // PERBAIKAN: Menambahkan rute untuk daftar user yang sebelumnya hilang
         Route::get('/users', [SuperadminController::class, 'users'])->name('users.index');
-        
         Route::post('/users/{user}/apikey', [SuperadminController::class, 'generateApiKey'])->name('users.apikey');
         Route::post('/users/{user}/subscription', [SuperadminController::class, 'manageSubscription'])->name('users.subscription');
 
@@ -42,9 +39,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/universitas', [SuperadminController::class, 'universitas'])->name('universitas');
         Route::get('/perusahaan', [SuperadminController::class, 'perusahaan'])->name('perusahaan');
         Route::get('/pengaturan', [SuperadminController::class, 'pengaturan'])->name('pengaturan');
-        
         Route::delete('/logs/clear', [SuperadminController::class, 'clearLogs'])->name('logs.clear');
-        
         Route::post('/users/{user}/change-password', [SuperadminController::class, 'changePassword'])->name('users.changePassword');
         Route::delete('/users/{user}', [SuperadminController::class, 'deleteUser'])->name('users.delete');
         Route::post('/users/store', [SuperadminController::class, 'storeUser'])->name('users.store');

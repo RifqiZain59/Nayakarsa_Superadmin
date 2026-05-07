@@ -89,6 +89,11 @@
                 </button>
 
                 <div x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" class="ml-4 mt-2 space-y-2 border-l border-slate-700 pl-3">
+                    <a href="{{ route('superadmin.users.index') }}"
+                       class="nav-item text-sm {{ request()->routeIs('superadmin.users.index') ? 'text-white font-bold' : '' }}">
+                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                        <span class="sidebar-label">Daftar User</span>
+                    </a>
                     <a href="{{ route('superadmin.sekolah') }}"
                        class="nav-item text-sm {{ request()->routeIs('superadmin.sekolah') ? 'text-white font-bold' : '' }}">
                         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"/></svg>
