@@ -26,8 +26,13 @@ class SuperadminController extends Controller
     public function generateApiKey(User $user)
     {
         $user->tokens()->delete();
+        
+        // PERBAIKAN: Ambil nilai plainTextToken agar bisa ditampilkan ke user
         $token = $user->createToken('api-key')->plainTextToken;
-        return back()->with('success', 'API Key baru berhasil dibuat untuk ' . $user->name . '.');
+        
+        // Kirimkan token melalui session flash agar bisa di-copy oleh admin
+        return back()->with('success', 'API Key baru berhasil dibuat untuk ' . $user->name . '. Token: ' . $token)
+                     ->with('new_api_key', $token);
     }
 
     public function manageSubscription(Request $request, User $user)
@@ -95,6 +100,7 @@ class SuperadminController extends Controller
         if ($user->id === auth()->id()) {
             return back()->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
         }
+        
         $userEmail = $user->email;
         $user->tokens()->delete();
         $user->subscriptions()->delete();
@@ -131,9 +137,9 @@ class SuperadminController extends Controller
             'institution_name' => $request->institution_name,
         ]);
 
-        // 2. Generate API Key otomatis
-        $user->tokens()->delete();
-        $user->createToken('api-key');
+        // 2. Generate API Key otomatis & simpan plain token-nya
+        $user->tokens()->delete(); // Meskipun baru, memastikan token reset jika ada default behavior
+        $token = $user->createToken('api-key')->plainTextToken;
 
         // 3. Buat subscription jika durasi diisi
         if ($request->filled('plan_name') && $request->filled('duration_days')) {
@@ -151,12 +157,14 @@ class SuperadminController extends Controller
             'status' => 'SUKSES'
         ]);
 
+        // PERBAIKAN: Mengirimkan $token ke view agar bisa ditampilkan
         return back()->with([
-            'success'      => 'Akun ' . $user->name . ' berhasil ditambahkan beserta API Key & langganan.',
-            'new_user_id'  => $user->id,
+            'success'        => 'Akun ' . $user->name . ' berhasil ditambahkan beserta API Key & langganan.',
+            'new_user_id'    => $user->id,
             'new_user_email' => $user->email,
             'new_user_name'  => $user->name,
             'new_user_type'  => $user->institution_type,
+            'new_api_key'    => $token, 
         ]);
     }
 
