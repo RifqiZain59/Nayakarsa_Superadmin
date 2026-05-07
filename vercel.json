@@ -2,7 +2,7 @@
     "version": 2,
     "functions": {
         "api/index.php": {
-            "runtime": "vercel-php@0.7.3",
+            "runtime": "vercel-php@0.9.0",
             "maxDuration": 30
         }
     },
@@ -25,7 +25,7 @@
         "APP_DEBUG": "true",
         "APP_URL": "https://nayakarsa-superadmin.vercel.app",
         "LOG_CHANNEL": "stderr",
-        "FORCE_BUILD": "20260508_0640"
+        "FORCE_BUILD": "20260508_0645"
     },
     "installCommand": "echo 'Skip Install'",
     "buildCommand": "echo 'Skip Build'"
