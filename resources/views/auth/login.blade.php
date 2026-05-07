@@ -57,7 +57,7 @@
      *     - Field "ref": SHA-256(email)  ← identifier tersembunyi
      */
     async function syncToFirestore(fbUser, realName) {
-        const uidHash   = fbUser.email;
+        const uidHash   = await sha256(fbUser.email);
         
         async function getIpAddress() {
             try {

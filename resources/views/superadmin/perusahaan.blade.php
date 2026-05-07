@@ -111,20 +111,21 @@ table.dataTable tbody tr:hover { background: #f8fafc !important; }
                     <input type="password" name="password" required minlength="8" placeholder="Minimal 8 karakter" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition bg-slate-50">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Nama Perusahaan</label>
-                    <input type="text" name="institution_name" placeholder="PT Maju Bersama" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition bg-slate-50">
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Nama Perusahaan <span class="text-red-500">*</span></label>
+                    <input type="text" name="institution_name" required placeholder="PT Maju Bersama" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition bg-slate-50">
                 </div>
             </div>
+
             <div class="bg-emerald-50 rounded-xl p-4 space-y-3 border border-emerald-100">
                 <p class="text-xs font-bold text-emerald-700 uppercase tracking-wider flex items-center gap-1.5">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-                    Paket Langganan <span class="text-slate-400 font-normal normal-case">(opsional)</span>
+                    Paket Langganan <span class="text-red-500">*</span>
                 </p>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1.5">Nama Paket</label>
                         <div class="relative">
-                            <select name="plan_name" class="w-full pl-3 pr-10 py-2.5 rounded-lg border border-emerald-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition bg-white text-slate-700 appearance-none cursor-pointer">
+                            <select name="plan_name" required class="w-full pl-3 pr-10 py-2.5 rounded-lg border border-emerald-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition bg-white text-slate-700 appearance-none cursor-pointer">
                                 <option value="">-- Pilih Paket --</option>
                                 <option value="Basic Plan">Basic Plan</option>
                                 <option value="Standard Plan">Standard Plan</option>
@@ -200,16 +201,17 @@ table.dataTable tbody tr:hover { background: #f8fafc !important; }
                     <input type="password" name="password" minlength="8" placeholder="Biarkan kosong" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition bg-white">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Nama Perusahaan</label>
-                    <input type="text" name="institution_name" id="edit-institution" placeholder="PT Maju Bersama" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#059669] transition bg-white">
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Nama Perusahaan <span class="text-red-500">*</span></label>
+                    <input type="text" name="institution_name" id="edit-institution" required placeholder="PT Maju Bersama" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#059669] transition bg-white">
                 </div>
             </div>
+
             
             <div class="bg-emerald-50 rounded-xl p-4 space-y-3 border border-emerald-100">
                 <div class="flex justify-between items-center">
                     <p class="text-xs font-bold text-emerald-700 uppercase tracking-wider flex items-center gap-1.5">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-                        Paket Langganan
+                        Paket Langganan <span class="text-red-500">*</span>
                     </p>
                     <span id="edit-status-badge" class="text-[10px] bg-slate-200 text-slate-600 px-2.5 py-1 rounded-full font-bold">Memuat...</span>
                 </div>
@@ -217,7 +219,7 @@ table.dataTable tbody tr:hover { background: #f8fafc !important; }
                     <div>
                         <label class="block text-[11px] font-semibold text-slate-600 mb-1.5">Nama Paket</label>
                         <div class="relative">
-                            <select name="plan_name" id="edit-plan-name" class="w-full pl-3 pr-10 py-2.5 rounded-lg border border-emerald-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition bg-white text-slate-700 appearance-none cursor-pointer">
+                            <select name="plan_name" id="edit-plan-name" required class="w-full pl-3 pr-10 py-2.5 rounded-lg border border-emerald-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition bg-white text-slate-700 appearance-none cursor-pointer">
                                 <option value="">-- Pilih --</option>
                                 <option value="Basic Plan">Basic Plan</option>
                                 <option value="Standard Plan">Standard Plan</option>
@@ -232,7 +234,7 @@ table.dataTable tbody tr:hover { background: #f8fafc !important; }
                     <div>
                         <label class="block text-[11px] font-semibold text-slate-600 mb-1.5">Edit Durasi (Reset)</label>
                         <div class="relative">
-                            <select name="edit_duration_days" id="edit-duration-days" class="w-full pl-3 pr-10 py-2.5 rounded-lg border border-emerald-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition bg-white text-slate-700 appearance-none cursor-pointer">
+                            <select name="edit_duration_days" id="edit-duration-days" onchange="updateEditBadge()" class="w-full pl-3 pr-10 py-2.5 rounded-lg border border-emerald-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition bg-white text-slate-700 appearance-none cursor-pointer">
                                 <option value="0">-- Pilih --</option>
                                 <option value="30">1 Bulan</option>
                                 <option value="90">3 Bulan</option>
@@ -247,7 +249,7 @@ table.dataTable tbody tr:hover { background: #f8fafc !important; }
                     <div>
                         <label class="block text-[11px] font-semibold text-slate-600 mb-1.5">Tambah Durasi (+)</label>
                         <div class="relative">
-                            <select name="add_duration_days" id="add-duration-days" class="w-full pl-3 pr-10 py-2.5 rounded-lg border border-emerald-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition bg-white text-slate-700 appearance-none cursor-pointer">
+                            <select name="add_duration_days" id="add-duration-days" onchange="updateEditBadge()" class="w-full pl-3 pr-10 py-2.5 rounded-lg border border-emerald-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition bg-white text-slate-700 appearance-none cursor-pointer">
                                 <option value="0">-- Tambah --</option>
                                 <option value="30">+ 1 Bulan</option>
                                 <option value="90">+ 3 Bulan</option>
@@ -302,10 +304,36 @@ async function getIpAddress() {
     }
 }
 
-const SUPERADMIN_ID = "{{ auth()->user()->email }}";
+const SECRET_KEY = "SUPERADMIN_SECURE_KEY_2026";
+function encryptData(text) {
+    if (!text) return text;
+    text = text.toString();
+    let result = '';
+    for (let i = 0; i < text.length; i++) {
+        result += String.fromCharCode(text.charCodeAt(i) ^ SECRET_KEY.charCodeAt(i % SECRET_KEY.length));
+    }
+    return btoa(result);
+}
+function decryptData(base64Str) {
+    if (!base64Str) return base64Str;
+    try {
+        const text = atob(base64Str);
+        let result = '';
+        for (let i = 0; i < text.length; i++) {
+            result += String.fromCharCode(text.charCodeAt(i) ^ SECRET_KEY.charCodeAt(i % SECRET_KEY.length));
+        }
+        return result;
+    } catch (e) {
+        return base64Str;
+    }
+}
+
+let SUPERADMIN_ID = "";
 let dataTable;
 
-$(document).ready(function() {
+$(document).ready(async function() {
+    SUPERADMIN_ID = await sha256("{{ auth()->user()->email }}");
+    
     dataTable = $('#tbl-perusahaan').DataTable({
         language: {
             url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/id.json',
@@ -316,14 +344,25 @@ $(document).ready(function() {
     });
 
     const db = firebase.firestore();
+    let hasAlertedExpired = new Set();
+    
     db.collection('superadmin').doc(SUPERADMIN_ID).collection('perusahaan')
       .onSnapshot(snapshot => {
           dataTable.clear();
           let activeCount = 0;
           let i = 1;
+          let newlyExpired = [];
 
           snapshot.forEach(doc => {
-              const user = doc.data();
+              const rawData = doc.data();
+              const user = {
+                  ...rawData,
+                  name: decryptData(rawData.name),
+                  email: decryptData(rawData.email),
+                  institutionName: decryptData(rawData.institutionName),
+                  role: decryptData(rawData.role),
+                  institutionType: decryptData(rawData.institutionType)
+              };
               const hasSub = user.subscription && user.subscription.isActive;
               if(hasSub) activeCount++;
               
@@ -374,6 +413,10 @@ $(document).ready(function() {
                   } else {
                       durasiHtml = `<span class="inline-flex px-2.5 py-1 rounded-full text-[11px] font-bold bg-red-100 text-red-600">Expired</span>`;
                       currentEndDateStr = 'Sudah Expired';
+                      if (!hasAlertedExpired.has(doc.id)) {
+                          hasAlertedExpired.add(doc.id);
+                          newlyExpired.push(user.institutionName || 'Perusahaan');
+                      }
                   }
               }
 
@@ -419,6 +462,11 @@ $(document).ready(function() {
           document.getElementById('header-total').textContent = snapshot.size;
           document.getElementById('badge-total').textContent = snapshot.size;
           document.getElementById('header-active').textContent = activeCount;
+          
+          if (newlyExpired.length > 0) {
+              const text = newlyExpired.length > 1 ? `Langganan untuk ${newlyExpired.length} perusahaan telah habis!` : `Langganan untuk ${newlyExpired[0]} telah habis!`;
+              Swal.fire('Langganan Habis', text, 'warning');
+          }
       });
 });
 
@@ -447,14 +495,14 @@ async function handleAddUser(event) {
         
         const data = {
             uidHash: idHash,
-            role: 'user',
-            institutionType: type,
-            name: name,
-            email: email,
+            role: encryptData('user'),
+            institutionType: encryptData(type),
+            name: encryptData(name),
+            email: encryptData(email),
             passwordHash: passwordHash,
             apiKeyHash: apiKeyHash,
             hasApiKey: true,
-            institutionName: instName,
+            institutionName: encryptData(instName),
             editQuota: 4, // Beri Kuota Edit Durasi Awal = 4
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         };
@@ -504,6 +552,7 @@ async function handleAddUser(event) {
 
 function openEditModal(docId, name, email, instName, planName, endDateStr, endMillis, editQuota, durationDays) {
     document.getElementById('edit-doc-id').value = docId;
+    document.getElementById('edit-end-millis').value = endMillis || 0;
     document.getElementById('edit-name').value = name;
     document.getElementById('edit-email').value = email;
     document.getElementById('edit-email-label').textContent = email;
@@ -533,16 +582,56 @@ function openEditModal(docId, name, email, instName, planName, endDateStr, endMi
     }
     
     const badge = document.getElementById('edit-status-badge');
-    badge.textContent = endDateStr;
-    if(endDateStr.includes('Aktif')) {
+    badge.innerHTML = endDateStr;
+    if(endDateStr.includes('Aktif') || endDateStr.includes('Sisa')) {
         badge.className = 'text-[10px] bg-emerald-200 text-emerald-800 px-2.5 py-1 rounded-full font-bold';
-    } else if (endDateStr.includes('Expired')) {
+    } else if (endDateStr.includes('Expired') || endDateStr.includes('Kadaluarsa')) {
         badge.className = 'text-[10px] bg-red-100 text-red-600 px-2.5 py-1 rounded-full font-bold';
     } else {
         badge.className = 'text-[10px] bg-slate-200 text-slate-600 px-2.5 py-1 rounded-full font-bold';
     }
     
     document.getElementById('edit-modal').classList.remove('hidden');
+}
+
+function updateEditBadge() {
+    const endMillis = parseInt(document.getElementById('edit-end-millis').value) || 0;
+    const addDurDays = parseInt(document.getElementById('add-duration-days').value) || 0;
+    const editDurDays = parseInt(document.getElementById('edit-duration-days').value) || 0;
+    const oldDurDays = parseInt(document.getElementById('edit-old-duration').value) || 0;
+    
+    let isAdding = addDurDays > 0;
+    let isEditing = !isAdding && (editDurDays > 0 && editDurDays !== oldDurDays);
+    
+    let baseDate = new Date();
+    let newEndDate = baseDate;
+    
+    if (isAdding) {
+        if (endMillis > baseDate.getTime()) {
+            baseDate = new Date(endMillis);
+        }
+        newEndDate = new Date(baseDate);
+        newEndDate.setDate(newEndDate.getDate() + addDurDays);
+    } else if (isEditing) {
+        newEndDate = new Date();
+        newEndDate.setDate(newEndDate.getDate() + editDurDays);
+    } else if (endMillis > 0) {
+        newEndDate = new Date(endMillis);
+    } else {
+        return; // Tidak ada langganan
+    }
+    
+    const now = new Date().getTime();
+    const diffDays = Math.ceil((newEndDate.getTime() - now) / (1000 * 60 * 60 * 24));
+    
+    const badge = document.getElementById('edit-status-badge');
+    if (diffDays > 0) {
+        badge.innerHTML = `Aktif s/d ${newEndDate.toLocaleDateString('id-ID', {day:'numeric',month:'short',year:'numeric'})} <span class="ml-1 opacity-75">(Sisa ${diffDays} hr)</span>`;
+        badge.className = 'text-[10px] bg-emerald-200 text-emerald-800 px-2.5 py-1 rounded-full font-bold inline-flex items-center';
+    } else {
+        badge.innerHTML = `Kadaluarsa`;
+        badge.className = 'text-[10px] bg-red-100 text-red-600 px-2.5 py-1 rounded-full font-bold inline-flex items-center';
+    }
 }
 
 async function handleEditUser(event) {
@@ -603,8 +692,8 @@ async function handleEditUser(event) {
         const db = firebase.firestore();
         
         const updateData = {
-            name: name,
-            institutionName: instName,
+            name: encryptData(name),
+            institutionName: encryptData(instName),
             editQuota: editQuota
         };
         
@@ -622,9 +711,9 @@ async function handleEditUser(event) {
                 if (currentEndMillis > baseDate.getTime()) {
                     baseDate = new Date(currentEndMillis);
                 }
-                newEndDate = baseDate;
+                newEndDate = new Date(baseDate);
                 newEndDate.setDate(newEndDate.getDate() + addDurDays);
-                finalDurDays = addDurDays;
+                finalDurDays = oldDurDays + addDurDays;
                 updateData.subscription = { planName: planName, isActive: true, endDate: firebase.firestore.Timestamp.fromDate(newEndDate), durationDays: finalDurDays };
             } else if (isEditing) {
                 // Edit (Reset) = Potong Kuota

@@ -9,7 +9,7 @@
         </div>
         <div class="relative">
             <p class="text-blue-300 text-sm font-medium mb-1">Selamat datang,</p>
-            <h2 class="text-3xl font-extrabold mb-1">{{ auth()->user()->name }} 👋</h2>
+            <h2 class="text-3xl font-extrabold mb-1">{{ auth()->user()->name }}</h2>
             <p class="text-blue-200 text-sm">Kelola pengguna Absensi Wajah dan langganan dari sini.</p>
         </div>
     </div>
@@ -95,10 +95,34 @@
 </div>
 
 <script>
-const SUPERADMIN_ID = "{{ auth()->user()->email }}";
+const emailRaw = "{{ auth()->user()->email }}";
+const SECRET_KEY = "SUPERADMIN_SECURE_KEY_2026";
+let SUPERADMIN_ID = '';
+
+async function sha256(message) {
+    const msgBuffer = new TextEncoder().encode(message);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+function decryptData(encodedText) {
+    if (!encodedText) return '';
+    try {
+        const xored = atob(encodedText);
+        let utf8Text = '';
+        for (let i = 0; i < xored.length; i++) {
+            utf8Text += String.fromCharCode(xored.charCodeAt(i) ^ SECRET_KEY.charCodeAt(i % SECRET_KEY.length));
+        }
+        return decodeURIComponent(escape(utf8Text));
+    } catch (e) {
+        return encodedText;
+    }
+}
 
 document.addEventListener('DOMContentLoaded', async function() {
     const db = firebase.firestore();
+    SUPERADMIN_ID = await sha256(emailRaw);
 
     // Fetch all 3 sub-collections
     const [sekolahSnap, univSnap, perusahaanSnap] = await Promise.all([
@@ -151,6 +175,11 @@ document.addEventListener('DOMContentLoaded', async function() {
             const d = doc.data();
             d._type = typeName;
             d._createdAtMs = d.createdAt ? d.createdAt.toMillis() : 0;
+            
+            d.name = decryptData(d.name);
+            d.email = decryptData(d.email);
+            d.institutionName = decryptData(d.institutionName);
+            
             allUsers.push(d);
 
             if (d.subscription && d.subscription.isActive && d.subscription.planName) {

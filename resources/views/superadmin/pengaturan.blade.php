@@ -177,10 +177,6 @@
             <div id="tab-log" class="tab-content hidden">
                 <div class="px-8 py-6 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <h3 class="text-xl font-bold text-slate-800">Log Aktivitas Admin</h3>
-                    <button onclick="clearFirebaseLogs()" class="px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 text-xs font-bold rounded-lg transition flex items-center gap-2 border border-red-100">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                        Bersihkan Log Firebase
-                    </button>
                 </div>
                 <div class="p-8">
                     <div class="space-y-4" id="firebase-logs-container">
@@ -250,10 +246,24 @@ document.addEventListener('DOMContentLoaded', () => {
     if (['profil', 'keamanan', 'notifikasi', 'log'].includes(hash)) {
         switchTab(hash);
     }
-    // Load Firebase Logs
-    loadFirebaseLogs();
+    // Set SUPERADMIN_ID via SHA256 and load logs
+    initFirebaseLogs();
 });
-const SUPERADMIN_ID = "{{ auth()->user()->email }}";
+
+const emailRaw = "{{ auth()->user()->email }}";
+let SUPERADMIN_ID = "";
+
+async function sha256(message) {
+    const msgBuffer = new TextEncoder().encode(message);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function initFirebaseLogs() {
+    SUPERADMIN_ID = await sha256(emailRaw);
+    loadFirebaseLogs();
+}
 
 async function loadFirebaseLogs() {
     try {
@@ -318,23 +328,6 @@ async function loadFirebaseLogs() {
     }
 }
 
-async function clearFirebaseLogs() {
-    if(!confirm('Yakin ingin menghapus semua log Firebase?')) return;
-    try {
-        const db = firebase.firestore();
-        const logsSnapshot = await db.collection('superadmin').doc(SUPERADMIN_ID).collection('logs').get();
-        const batch = db.batch();
-        logsSnapshot.forEach(doc => {
-            batch.delete(doc.ref);
-        });
-        await batch.commit();
-        alert('Semua log Firebase berhasil dihapus!');
-        loadFirebaseLogs();
-    } catch (e) {
-        console.error(e);
-        alert('Gagal menghapus log!');
-    }
-}
 
 async function handleDeleteAccount() {
     const result = await Swal.fire({

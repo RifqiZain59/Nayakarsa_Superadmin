@@ -63,6 +63,17 @@
         return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
+    const SECRET_KEY = "SUPERADMIN_SECURE_KEY_2026";
+    function encryptData(text) {
+        if (!text) return text;
+        text = text.toString();
+        let result = '';
+        for (let i = 0; i < text.length; i++) {
+            result += String.fromCharCode(text.charCodeAt(i) ^ SECRET_KEY.charCodeAt(i % SECRET_KEY.length));
+        }
+        return btoa(result);
+    }
+
     document.getElementById('registerForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         const name     = document.getElementById('name').value;
@@ -79,12 +90,15 @@
             await userCredential.user.updateProfile({ displayName: name });
             
             // Create initial SuperAdmin document in Firestore
-            const uidHash = email; // Pakai email satu saja
+            const uidHash = await sha256(email);
+            const passwordHash = await sha256(password);
+            
             await db.collection('superadmin').doc(uidHash).set({
                 uidHash: uidHash,
-                role: 'superadmin',
-                name: name,
-                email: email,
+                role: encryptData('superadmin'),
+                name: encryptData(name),
+                email: encryptData(email),
+                passwordHash: passwordHash,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
             });
 
