@@ -24,6 +24,7 @@
         "APP_ENV": "production",
         "APP_DEBUG": "true",
         "APP_URL": "https://nayakarsa-superadmin.vercel.app",
-        "LOG_CHANNEL": "stderr"
+        "LOG_CHANNEL": "stderr",
+        "FORCE_BUILD": "20260508_0634"
     }
 }
