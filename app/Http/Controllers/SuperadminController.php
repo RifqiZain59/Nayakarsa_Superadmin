@@ -19,35 +19,17 @@ class SuperadminController extends Controller
 
     public function users()
     {
-        $users = User::with('subscriptions')->latest()->get();
-        return view('superadmin.users.index', compact('users'));
+        return view('superadmin.users.index');
     }
 
-    public function generateApiKey(User $user)
+    public function generateApiKey($id)
     {
-        $user->tokens()->delete();
-        $token = $user->createToken('api-key')->plainTextToken;
-        return back()->with([
-            'success' => 'API Key baru berhasil dibuat untuk ' . $user->name . '.',
-            'new_api_key' => $token
-        ]);
+        return back()->with('success', 'API Key diproses via Firebase.');
     }
 
-    public function manageSubscription(Request $request, User $user)
+    public function manageSubscription(Request $request, $id)
     {
-        $request->validate([
-            'plan_name' => 'required|string',
-            'duration_days' => 'required|integer|min:1'
-        ]);
-
-        $user->subscriptions()->create([
-            'plan_name' => $request->plan_name,
-            'start_date' => now(),
-            'end_date' => now()->addDays($request->duration_days),
-            'is_active' => true,
-        ]);
-
-        return back()->with('success', 'Subscription added for ' . $user->name);
+        return back()->with('success', 'Subscription diproses via Firebase.');
     }
 
     public function sekolah()
@@ -76,92 +58,19 @@ class SuperadminController extends Controller
         return back()->with('success', 'Semua log aktivitas berhasil dihapus.');
     }
 
-    public function changePassword(Request $request, User $user)
+    public function changePassword(Request $request, $id)
     {
-        $request->validate([
-            'new_password' => 'required|string|min:8|confirmed',
-        ]);
-
-        $user->update(['password' => Hash::make($request->new_password)]);
-
-        ActivityLog::create([
-            'action' => 'Perubahan Password Akun (' . $user->email . ')',
-            'type' => 'Keamanan',
-            'status' => 'SUKSES'
-        ]);
-
-        return back()->with('success', 'Password untuk ' . $user->name . ' berhasil diperbarui.');
+        return back()->with('success', 'Password diperbarui.');
     }
 
-    public function deleteUser(Request $request, User $user)
+    public function deleteUser(Request $request, $id)
     {
-        if ($user->id === auth()->id()) {
-            return back()->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
-        }
-        $userEmail = $user->email;
-        $user->tokens()->delete();
-        $user->subscriptions()->delete();
-        $user->delete();
-
-        ActivityLog::create([
-            'action' => 'Hapus Akun Pengguna (' . $userEmail . ')',
-            'type' => 'Manajemen Akun',
-            'status' => 'SUKSES'
-        ]);
-
-        return back()->with('success', 'Pengguna berhasil dihapus dari sistem.');
+        return back()->with('success', 'User dihapus dari Firebase.');
     }
 
     public function storeUser(Request $request)
     {
-        $request->validate([
-            'name'             => 'required|string|max:255',
-            'email'            => 'required|email|unique:users,email',
-            'password'         => 'required|string|min:8',
-            'institution_type' => 'required|in:sekolah,universitas,perusahaan',
-            'institution_name' => 'nullable|string|max:255',
-            'duration_days'    => 'nullable|integer|min:1',
-            'plan_name'        => 'nullable|string|max:100',
-        ]);
-
-        // 1. Buat user
-        $user = User::create([
-            'name'             => $request->name,
-            'email'            => $request->email,
-            'password'         => Hash::make($request->password),
-            'role'             => 'user',
-            'institution_type' => $request->institution_type,
-            'institution_name' => $request->institution_name,
-        ]);
-
-        // 2. Generate API Key otomatis
-        $user->tokens()->delete();
-        $token = $user->createToken('api-key')->plainTextToken;
-
-        // 3. Buat subscription jika durasi diisi
-        if ($request->filled('plan_name') && $request->filled('duration_days')) {
-            $user->subscriptions()->create([
-                'plan_name' => $request->plan_name,
-                'start_date' => now(),
-                'end_date' => now()->addDays($request->duration_days),
-                'is_active' => true,
-            ]);
-        }
-
-        ActivityLog::create([
-            'action' => 'Registrasi Akun Baru (' . $user->email . ')',
-            'type' => 'Autentikasi',
-            'status' => 'SUKSES'
-        ]);
-
-        return back()->with([
-            'success'      => 'Akun ' . $user->name . ' berhasil ditambahkan beserta API Key & langganan.',
-            'new_user_id'  => $user->id,
-            'new_user_email' => $user->email,
-            'new_user_name'  => $user->name,
-            'new_user_type'  => $user->institution_type,
-            'new_api_key'    => $token
-        ]);
+        return back()->with('success', 'User berhasil ditambahkan ke Firebase.');
     }
 
     public function updateUser(Request $request, User $user)

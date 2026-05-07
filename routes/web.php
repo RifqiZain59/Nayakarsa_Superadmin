@@ -31,8 +31,8 @@ Route::middleware('auth')->group(function () {
     Route::prefix('superadmin')->name('superadmin.')->middleware('superadmin')->group(function () {
         Route::get('/dashboard', [SuperadminController::class, 'dashboard'])->name('dashboard');
         Route::get('/users', [SuperadminController::class, 'users'])->name('users.index');
-        Route::post('/users/{user}/apikey', [SuperadminController::class, 'generateApiKey'])->name('users.apikey');
-        Route::post('/users/{user}/subscription', [SuperadminController::class, 'manageSubscription'])->name('users.subscription');
+        Route::post('/users/{id}/apikey', [SuperadminController::class, 'generateApiKey'])->name('users.apikey');
+        Route::post('/users/{id}/subscription', [SuperadminController::class, 'manageSubscription'])->name('users.subscription');
 
         // Kelola Akun sub-pages
         Route::get('/sekolah', [SuperadminController::class, 'sekolah'])->name('sekolah');
@@ -40,10 +40,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/perusahaan', [SuperadminController::class, 'perusahaan'])->name('perusahaan');
         Route::get('/pengaturan', [SuperadminController::class, 'pengaturan'])->name('pengaturan');
         Route::delete('/logs/clear', [SuperadminController::class, 'clearLogs'])->name('logs.clear');
-        Route::post('/users/{user}/change-password', [SuperadminController::class, 'changePassword'])->name('users.changePassword');
-        Route::delete('/users/{user}', [SuperadminController::class, 'deleteUser'])->name('users.delete');
+        Route::post('/users/{id}/change-password', [SuperadminController::class, 'changePassword'])->name('users.changePassword');
+        Route::delete('/users/{id}', [SuperadminController::class, 'deleteUser'])->name('users.delete');
         Route::post('/users/store', [SuperadminController::class, 'storeUser'])->name('users.store');
-        Route::put('/users/{user}', [SuperadminController::class, 'updateUser'])->name('users.update');
-        Route::post('/users/{user}/profile', [SuperadminController::class, 'updateProfile'])->name('users.profile');
+        Route::put('/users/{id}', [SuperadminController::class, 'updateUser'])->name('users.update');
+        Route::post('/users/{id}/profile', [SuperadminController::class, 'updateProfile'])->name('users.profile');
     });
 });
