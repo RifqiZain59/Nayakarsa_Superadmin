@@ -43,7 +43,7 @@ export default function PengaturanPage() {
   }, []);
 
   return (
-    <div className="p-8 max-w-4xl mx-auto space-y-8">
+    <div className="p-8 space-y-8">
       {/* Header */}
       <div className="bg-gradient-to-br from-slate-100 to-white rounded-[2.5rem] p-10 border border-slate-100 shadow-sm flex items-center justify-between">
         <div>

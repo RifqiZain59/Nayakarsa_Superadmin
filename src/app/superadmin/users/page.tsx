@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { db } from "@/lib/firebase";
-import { collection, getDocs, doc, setDoc, deleteDoc, updateDoc, serverTimestamp } from "firebase/firestore";
+import { collection, onSnapshot, doc, setDoc, deleteDoc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { sha256, encryptData, decryptData, generateApiKey } from "@/lib/utils";
 import Swal from "sweetalert2";
 
@@ -26,40 +26,42 @@ export default function UsersPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showApiKey, setShowApiKey] = useState<{ name: string; key: string } | null>(null);
 
-  const fetchUsers = async () => {
-    setLoading(true);
-    const superadminEmail = "nayakarsa.artano@gmail.com"; // Mock email for now, should come from auth
-    const superadminId = await sha256(superadminEmail);
-    const collections = ["sekolah", "universitas", "perusahaan"];
-    
-    try {
-      const allUsers: UserData[] = [];
-      for (const col of collections) {
-        const querySnapshot = await getDocs(collection(db, "superadmin", superadminId, col));
-        querySnapshot.forEach((doc) => {
-          const d = doc.data();
-          allUsers.push({
-            id: doc.id,
-            name: decryptData(d.name),
-            email: decryptData(d.email),
-            institutionName: decryptData(d.institutionName),
-            institutionType: col,
-            apiKeyHash: d.apiKeyHash,
-            hasApiKey: d.hasApiKey,
-            subscription: d.subscription,
-          });
-        });
-      }
-      setUsers(allUsers);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchUsers();
+    let unsubscribes: (() => void)[] = [];
+    
+    const startSync = async () => {
+      const superadminEmail = "nayakarsa.artano@gmail.com";
+      const superadminId = await sha256(superadminEmail);
+      const collections = ["sekolah", "universitas", "perusahaan"];
+      
+      collections.forEach((col) => {
+        const q = collection(db, "superadmin", superadminId, col);
+        const unsub = onSnapshot(q, (snapshot) => {
+          setUsers(prev => {
+            const otherColUsers = prev.filter(u => u.institutionType !== col);
+            const newColUsers = snapshot.docs.map(doc => {
+              const d = doc.data();
+              return {
+                id: doc.id,
+                name: decryptData(d.name),
+                email: decryptData(d.email),
+                institutionName: decryptData(d.institutionName),
+                institutionType: col,
+                apiKeyHash: d.apiKeyHash,
+                hasApiKey: d.hasApiKey,
+                subscription: d.subscription,
+              };
+            });
+            return [...otherColUsers, ...newColUsers];
+          });
+          setLoading(false);
+        });
+        unsubscribes.push(unsub);
+      });
+    };
+
+    startSync();
+    return () => unsubscribes.forEach(unsub => unsub());
   }, []);
 
   const handleAddUser = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -156,7 +158,7 @@ export default function UsersPage() {
   };
 
   return (
-    <div className="p-8 max-w-7xl mx-auto space-y-8">
+    <div className="p-8 space-y-8">
       {/* Header */}
       <div className="bg-gradient-to-r from-slate-900 to-blue-900 rounded-3xl p-8 text-white shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 p-8 opacity-10">

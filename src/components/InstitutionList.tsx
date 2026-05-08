@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { db } from "@/lib/firebase";
-import { collection, getDocs, doc, deleteDoc, updateDoc } from "firebase/firestore";
+import { collection, onSnapshot, doc, deleteDoc, updateDoc, query } from "firebase/firestore";
 import { sha256, encryptData, decryptData, generateApiKey } from "@/lib/utils";
 import Swal from "sweetalert2";
 
@@ -27,35 +27,36 @@ export default function InstitutionList({ type, title, colorClass, bgGradient }:
   const [loading, setLoading] = useState(true);
   const [showApiKey, setShowApiKey] = useState<{ name: string; key: string } | null>(null);
 
-  const fetchData = async () => {
-    setLoading(true);
-    const superadminEmail = "nayakarsa.artano@gmail.com";
-    const superadminId = await sha256(superadminEmail);
-    
-    try {
-      const querySnapshot = await getDocs(collection(db, "superadmin", superadminId, type));
-      const data: InstitutionData[] = [];
-      querySnapshot.forEach((doc) => {
-        const d = doc.data();
-        data.push({
-          id: doc.id,
-          name: decryptData(d.name),
-          email: decryptData(d.email),
-          institutionName: decryptData(d.institutionName),
-          apiKeyHash: d.apiKeyHash,
-          hasApiKey: d.hasApiKey,
-        });
-      });
-      setItems(data);
-    } catch (error) {
-      console.error(`Error fetching ${type}:`, error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchData();
+    let unsubscribe: () => void;
+    
+    const startSync = async () => {
+      const superadminEmail = "nayakarsa.artano@gmail.com";
+      const superadminId = await sha256(superadminEmail);
+      
+      const q = query(collection(db, "superadmin", superadminId, type));
+      unsubscribe = onSnapshot(q, (snapshot) => {
+        const data: InstitutionData[] = snapshot.docs.map((doc) => {
+          const d = doc.data();
+          return {
+            id: doc.id,
+            name: decryptData(d.name),
+            email: decryptData(d.email),
+            institutionName: decryptData(d.institutionName),
+            apiKeyHash: d.apiKeyHash,
+            hasApiKey: d.hasApiKey,
+          };
+        });
+        setItems(data);
+        setLoading(false);
+      }, (error) => {
+        console.error(`Error syncing ${type}:`, error);
+        setLoading(false);
+      });
+    };
+
+    startSync();
+    return () => { if (unsubscribe) unsubscribe(); };
   }, [type]);
 
   const handleDelete = async (id: string, name: string) => {
@@ -73,7 +74,6 @@ export default function InstitutionList({ type, title, colorClass, bgGradient }:
         const superadminEmail = "nayakarsa.artano@gmail.com";
         const superadminId = await sha256(superadminEmail);
         await deleteDoc(doc(db, "superadmin", superadminId, type, id));
-        fetchData();
         Swal.fire("Terhapus!", "", "success");
       } catch (error: any) {
         Swal.fire("Error", error.message, "error");
@@ -103,7 +103,6 @@ export default function InstitutionList({ type, title, colorClass, bgGradient }:
         });
 
         setShowApiKey({ name, key: rawApi });
-        fetchData();
       } catch (error: any) {
         Swal.fire("Error", error.message, "error");
       }
