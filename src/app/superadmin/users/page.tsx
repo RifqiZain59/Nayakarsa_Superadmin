@@ -28,12 +28,12 @@ export default function UsersPage() {
 
   useEffect(() => {
     let unsubscribes: (() => void)[] = [];
-    
+
     const startSync = async () => {
       const superadminEmail = "nayakarsa.artano@gmail.com";
       const superadminId = await sha256(superadminEmail);
       const collections = ["sekolah", "universitas", "perusahaan"];
-      
+
       collections.forEach((col) => {
         const q = collection(db, "superadmin", superadminId, col);
         const unsub = onSnapshot(q, (snapshot) => {
@@ -95,10 +95,9 @@ export default function UsersPage() {
       };
 
       await setDoc(doc(db, "superadmin", superadminId, type, idHash), data);
-      
+
       setShowApiKey({ name, key: rawApi });
       setIsModalOpen(false);
-      fetchUsers();
       Swal.fire("Berhasil", "User telah ditambahkan ke Firebase", "success");
     } catch (error: any) {
       Swal.fire("Gagal", error.message, "error");
@@ -120,7 +119,6 @@ export default function UsersPage() {
         const superadminEmail = "nayakarsa.artano@gmail.com";
         const superadminId = await sha256(superadminEmail);
         await deleteDoc(doc(db, "superadmin", superadminId, type, id));
-        fetchUsers();
         Swal.fire("Terhapus!", "", "success");
       } catch (error: any) {
         Swal.fire("Error", error.message, "error");
@@ -143,14 +141,13 @@ export default function UsersPage() {
         const superadminId = await sha256(superadminEmail);
         const rawApi = generateApiKey();
         const apiHash = await sha256(rawApi);
-        
+
         await updateDoc(doc(db, "superadmin", superadminId, type, id), {
           apiKeyHash: apiHash,
           hasApiKey: true
         });
 
         setShowApiKey({ name, key: rawApi });
-        fetchUsers();
       } catch (error: any) {
         Swal.fire("Error", error.message, "error");
       }
@@ -169,7 +166,7 @@ export default function UsersPage() {
             <h1 className="text-4xl font-black tracking-tight">Manajemen Pengguna</h1>
             <p className="text-blue-200 mt-2 font-medium">Data real-time dari Cloud Firestore (Next.js Version)</p>
           </div>
-          <button 
+          <button
             onClick={() => setIsModalOpen(true)}
             className="bg-white text-blue-900 px-6 py-3 rounded-2xl font-bold hover:bg-blue-50 transition shadow-xl flex items-center gap-2"
           >
@@ -188,7 +185,7 @@ export default function UsersPage() {
               <p className="text-emerald-700 text-sm mt-1">Copy sekarang! Token ini hanya ditampilkan sekali demi keamanan.</p>
               <div className="mt-4 flex gap-3">
                 <code className="bg-white px-4 py-2 rounded-xl border border-emerald-100 font-mono text-sm flex-1">{showApiKey.key}</code>
-                <button 
+                <button
                   onClick={() => {
                     navigator.clipboard.writeText(showApiKey.key);
                     Swal.fire({ title: "Copied!", icon: "success", timer: 800, showConfirmButton: false });
@@ -242,10 +239,9 @@ export default function UsersPage() {
                     </div>
                   </td>
                   <td className="px-6 py-5">
-                    <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase ${
-                      user.institutionType === 'sekolah' ? 'bg-blue-50 text-blue-600' :
-                      user.institutionType === 'universitas' ? 'bg-indigo-50 text-indigo-600' : 'bg-emerald-50 text-emerald-600'
-                    }`}>
+                    <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase ${user.institutionType === 'sekolah' ? 'bg-blue-50 text-blue-600' :
+                        user.institutionType === 'universitas' ? 'bg-indigo-50 text-indigo-600' : 'bg-emerald-50 text-emerald-600'
+                      }`}>
                       {user.institutionType}
                     </span>
                   </td>
@@ -261,13 +257,13 @@ export default function UsersPage() {
                     )}
                   </td>
                   <td className="px-8 py-5 text-right space-x-2">
-                    <button 
+                    <button
                       onClick={() => handleRegenApiKey(user.institutionType, user.id, user.name)}
                       className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
                     </button>
-                    <button 
+                    <button
                       onClick={() => handleDelete(user.institutionType, user.id, user.name)}
                       className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition"
                     >
