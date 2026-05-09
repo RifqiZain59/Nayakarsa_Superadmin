@@ -91,20 +91,20 @@ export default function PengaturanPage() {
       {/* Left Sidebar Menu */}
       <div className="w-full md:w-80 shrink-0">
         <h1 className="text-3xl font-black text-slate-800 mb-8">Pengaturan</h1>
-        <nav className="space-y-2">
+        <nav className="space-y-3">
           {tabs.map((tab) => {
             const isActive = activeTab === tab.id;
             return (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold transition-all text-left ${
+                className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold transition-all duration-300 text-left ${
                   isActive 
-                  ? "bg-white text-blue-600 shadow-sm border border-slate-100" 
-                  : "text-slate-600 hover:bg-white/60 hover:text-slate-800 border border-transparent"
+                  ? "bg-white text-blue-700 shadow-xl shadow-slate-200/40 border border-slate-100 scale-[1.02]" 
+                  : "text-slate-500 hover:bg-white hover:text-slate-800 hover:shadow-md hover:shadow-slate-200/20 border border-transparent"
                 }`}
               >
-                <div className={`${isActive ? "text-blue-600" : "text-slate-500"}`}>
+                <div className={`${isActive ? "text-blue-600" : "text-slate-400 group-hover:text-slate-600"} transition-colors`}>
                   {tab.icon}
                 </div>
                 {tab.id}
