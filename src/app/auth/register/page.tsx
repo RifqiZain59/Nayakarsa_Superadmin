@@ -6,7 +6,7 @@ import Link from "next/link";
 import Swal from "sweetalert2";
 import { auth, db } from "@/lib/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { doc, setDoc, serverTimestamp, collection, addDoc } from "firebase/firestore";
 import { sha256 } from "@/lib/utils";
 import CryptoJS from "crypto-js";
 
@@ -44,6 +44,12 @@ export default function RegisterPage() {
         email: encryptedEmail,
         role: encryptedRole,
         createdAt: serverTimestamp()
+      });
+      
+      await addDoc(collection(db, "superadmin", emailHash, "logs"), {
+        action: "Register",
+        message: "Akun Superadmin baru berhasil didaftarkan",
+        timestamp: serverTimestamp()
       });
       
       Swal.fire({

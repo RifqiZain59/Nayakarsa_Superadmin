@@ -22,13 +22,13 @@ export function encryptData(text: string): string {
 export function decryptData(encoded: string): string {
     if (!encoded) return "";
     try {
-        let text = decodeURIComponent(escape(atob(encoded)));
+        const text = decodeURIComponent(escape(atob(encoded)));
         let result = '';
         for (let i = 0; i < text.length; i++) {
             result += String.fromCharCode(text.charCodeAt(i) ^ SECRET_KEY.charCodeAt(i % SECRET_KEY.length));
         }
         return result;
-    } catch (e) {
+    } catch (_e) {
         return encoded;
     }
 }

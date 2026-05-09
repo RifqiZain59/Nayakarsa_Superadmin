@@ -4,8 +4,10 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Swal from "sweetalert2";
-import { auth } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { sha256 } from "@/lib/utils";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -23,6 +25,13 @@ export default function LoginPage() {
         throw new Error("Koneksi ke server gagal. Konfigurasi Firebase (Environment Variables) di Vercel belum disetel atau kosong. Harap isi di menu Settings Vercel.");
       }
       await signInWithEmailAndPassword(auth, email, password);
+      
+      const emailHash = await sha256(email);
+      await addDoc(collection(db, "superadmin", emailHash, "logs"), {
+        action: "Login",
+        message: "Superadmin berhasil masuk ke sistem",
+        timestamp: serverTimestamp()
+      });
       
       Swal.fire({
         title: "Selamat Datang!",
