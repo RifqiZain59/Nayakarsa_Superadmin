@@ -69,7 +69,7 @@ export default function Sidebar() {
         </div>
       </div>
       
-      <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
+      <nav className="flex-1 px-4 space-y-3 overflow-y-auto mt-4">
         {mainMenuItems.map((item) => {
           const isActive = pathname === item.href;
           return (
