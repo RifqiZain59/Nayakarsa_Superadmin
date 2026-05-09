@@ -10,6 +10,11 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
+    if (!auth) {
+      console.error("Firebase auth is not initialized. Check your environment variables.");
+      router.push("/auth/login");
+      return;
+    }
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (!user) {
         // No user is signed in, redirect to login

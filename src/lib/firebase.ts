@@ -15,10 +15,12 @@ let app: FirebaseApp | undefined;
 let db: Firestore | any = null;
 let auth: Auth | any = null;
 
-if (typeof window !== "undefined") {
+if (typeof window !== "undefined" && firebaseConfig.apiKey) {
     app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
     db = getFirestore(app);
     auth = getAuth(app);
+} else if (typeof window !== "undefined") {
+    console.warn("Firebase config is missing. Please add NEXT_PUBLIC_FIREBASE_API_KEY to your environment variables.");
 }
 
 export { db, auth, app };
