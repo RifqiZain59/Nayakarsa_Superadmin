@@ -1,8 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { auth, db } from "@/lib/firebase";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { sha256 } from "@/lib/utils";
+import CryptoJS from "crypto-js";
+
+const ENCRYPTION_KEY = process.env.NEXT_PUBLIC_ENCRYPTION_KEY || "NayakarsaSecureKey2026";
 
 const mainMenuItems = [
   { name: "Dashboard", href: "/superadmin/dashboard", icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" },
@@ -17,18 +24,51 @@ const institutionSubItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [isInstOpen, setIsInstOpen] = useState(pathname.includes('sekolah') || pathname.includes('universitas') || pathname.includes('perusahaan'));
+  const [userData, setUserData] = useState<any>(null);
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, async (user) => {
+      if (user && user.email) {
+        const emailHash = await sha256(user.email);
+        const userDoc = await getDoc(doc(db, "superadmin", emailHash));
+        if (userDoc.exists()) {
+          const data = userDoc.data();
+          try {
+             const decryptedName = data.name ? CryptoJS.AES.decrypt(data.name, ENCRYPTION_KEY).toString(CryptoJS.enc.Utf8) : "";
+             const decryptedEmail = data.email ? CryptoJS.AES.decrypt(data.email, ENCRYPTION_KEY).toString(CryptoJS.enc.Utf8) : "";
+             setUserData({ 
+               ...data, 
+               name: decryptedName || data.name, 
+               email: decryptedEmail || data.email 
+             });
+          } catch (e) {
+             setUserData(data);
+          }
+        } else {
+          setUserData({ name: user.displayName || "Admin", email: user.email });
+        }
+      }
+    });
+    return () => unsub();
+  }, []);
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    router.push("/auth/login");
+  };
 
   return (
-    <aside className="w-72 bg-white border-r border-slate-100 flex flex-col h-screen sticky top-0 shrink-0">
+    <aside className="w-72 bg-blue-950 border-r border-blue-900 flex flex-col h-screen sticky top-0 shrink-0">
       <div className="p-8">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-blue-600 rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-lg shadow-blue-200">N</div>
-          <span className="font-black text-xl text-slate-800 tracking-tight">Nayakarsa</span>
+          <div className="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-blue-950 font-black text-xl shadow-lg">N</div>
+          <span className="font-black text-xl text-white tracking-tight">Nayakarsa</span>
         </div>
       </div>
       
-      <nav className="flex-1 px-4 space-y-1">
+      <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
         {mainMenuItems.map((item) => {
           const isActive = pathname === item.href;
           return (
@@ -37,8 +77,8 @@ export default function Sidebar() {
               href={item.href}
               className={`flex items-center gap-4 px-5 py-3.5 rounded-2xl text-sm font-bold transition-all ${
                 isActive 
-                ? "bg-blue-50 text-blue-600 shadow-sm border border-blue-100" 
-                : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"
+                ? "bg-blue-900 text-white shadow-sm border border-blue-800" 
+                : "text-blue-200 hover:text-white hover:bg-blue-900/50"
               }`}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -54,7 +94,7 @@ export default function Sidebar() {
           <button 
             onClick={() => setIsInstOpen(!isInstOpen)}
             className={`w-full flex items-center justify-between px-5 py-3.5 rounded-2xl text-sm font-bold transition-all ${
-              isInstOpen ? "text-slate-700" : "text-slate-400 hover:bg-slate-50"
+              isInstOpen ? "text-white" : "text-blue-200 hover:bg-blue-900/50"
             }`}
           >
             <div className="flex items-center gap-4">
@@ -69,7 +109,7 @@ export default function Sidebar() {
           </button>
           
           {isInstOpen && (
-            <div className="mt-1 ml-4 border-l-2 border-slate-50 space-y-1">
+            <div className="mt-1 ml-4 border-l-2 border-blue-900 space-y-1">
               {institutionSubItems.map((item) => {
                 const isActive = pathname === item.href;
                 return (
@@ -78,8 +118,8 @@ export default function Sidebar() {
                     href={item.href}
                     className={`flex items-center gap-4 px-6 py-2.5 rounded-xl text-[13px] font-bold transition-all ${
                       isActive 
-                      ? "text-blue-600" 
-                      : "text-slate-400 hover:text-slate-600"
+                      ? "text-white bg-blue-900/30" 
+                      : "text-blue-300 hover:text-white"
                     }`}
                   >
                     {item.name}
@@ -94,8 +134,8 @@ export default function Sidebar() {
           href="/superadmin/pengaturan"
           className={`flex items-center gap-4 px-5 py-3.5 rounded-2xl text-sm font-bold transition-all ${
             pathname === "/superadmin/pengaturan"
-            ? "bg-blue-50 text-blue-600 shadow-sm border border-blue-100" 
-            : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"
+            ? "bg-blue-900 text-white shadow-sm border border-blue-800" 
+            : "text-blue-200 hover:text-white hover:bg-blue-900/50"
           }`}
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -105,13 +145,23 @@ export default function Sidebar() {
         </Link>
       </nav>
 
-      <div className="p-6 mt-auto">
-        <div className="bg-slate-900 rounded-3xl p-5 text-white relative overflow-hidden">
-          <div className="relative z-10">
-            <p className="text-[10px] font-bold text-blue-400 uppercase tracking-widest">Support</p>
-            <p className="text-sm font-bold mt-1">Butuh bantuan?</p>
-            <button className="mt-3 w-full py-2 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-bold transition">Hubungi Kami</button>
+      {/* User Footer */}
+      <div className="p-4 mt-auto border-t border-blue-900">
+        <div className="flex items-center gap-3 p-3 bg-blue-900 rounded-2xl border border-blue-800">
+          <div className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center font-black text-blue-950">
+            {userData?.name?.charAt(0).toUpperCase() || "A"}
           </div>
+          <div className="flex-1 overflow-hidden">
+            <p className="text-xs font-bold text-white truncate">{userData?.name || "..."}</p>
+            <p className="text-[10px] text-blue-200 truncate">{userData?.email || "..."}</p>
+          </div>
+          <button 
+            onClick={handleLogout}
+            className="p-2 text-blue-300 hover:text-white transition"
+            title="Keluar"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+          </button>
         </div>
       </div>
     </aside>

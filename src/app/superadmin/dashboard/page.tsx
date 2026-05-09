@@ -1,15 +1,43 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { auth, db } from "@/lib/firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { sha256 } from "@/lib/utils";
+import CryptoJS from "crypto-js";
 
 export default function DashboardPage() {
+  const [userData, setUserData] = useState<any>(null);
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, async (user) => {
+      if (user && user.email) {
+        const emailHash = await sha256(user.email);
+        const userDoc = await getDoc(doc(db, "superadmin", emailHash));
+        if (userDoc.exists()) {
+          const data = userDoc.data();
+          try {
+             const decryptedName = data.name ? CryptoJS.AES.decrypt(data.name, process.env.NEXT_PUBLIC_ENCRYPTION_KEY || "NayakarsaSecureKey2026").toString(CryptoJS.enc.Utf8) : "";
+             setUserData({ ...data, name: decryptedName || data.name });
+          } catch (e) {
+             setUserData(data);
+          }
+        } else {
+          setUserData({ name: user.displayName || "Admin", email: user.email });
+        }
+      }
+    });
+    return () => unsub();
+  }, []);
+
   return (
     <div className="p-10 space-y-10 min-h-screen bg-slate-50/30">
       {/* Welcome Section */}
       <div className="bg-white rounded-[2.5rem] p-10 shadow-xl shadow-slate-100/50 border border-slate-50 flex items-center justify-between">
         <div>
           <h1 className="text-4xl font-black text-slate-800 tracking-tight">Dashboard</h1>
-          <p className="text-slate-400 mt-2 font-medium">Selamat datang kembali, Superadmin Nayakarsa.</p>
+          <p className="text-slate-400 mt-2 font-medium">Selamat datang kembali, {userData?.name || "..."}.</p>
         </div>
         <div className="hidden md:block">
            <div className="bg-blue-50 text-blue-600 px-6 py-2 rounded-2xl font-black text-xs uppercase tracking-widest border border-blue-100">

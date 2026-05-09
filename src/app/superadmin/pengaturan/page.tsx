@@ -1,10 +1,12 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { db } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { sha256 } from "@/lib/utils";
 import Swal from "sweetalert2";
+import CryptoJS from "crypto-js";
 
 interface SuperadminProfile {
   name: string;
@@ -17,29 +19,49 @@ export default function PengaturanPage() {
   const [profile, setProfile] = useState<SuperadminProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchProfile = async () => {
-    setLoading(true);
-    const email = "nayakarsa.artano@gmail.com"; // Current user email
-    const id = await sha256(email);
-    
-    try {
-      // For demonstration, we show the static data or fetch from a 'superadmins' collection if it exists
-      // Here we simulate the profile data
-      setProfile({
-        name: "Artano Nayakarsa",
-        email: email,
-        role: "Superadmin",
-        lastLogin: new Date().toLocaleString(),
-      });
-    } catch (error) {
-      console.error("Error fetching profile:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchProfile();
+    const unsub = onAuthStateChanged(auth, async (user) => {
+      if (user && user.email) {
+        const emailHash = await sha256(user.email);
+        try {
+          const userDoc = await getDoc(doc(db, "superadmin", emailHash));
+          if (userDoc.exists()) {
+            const data = userDoc.data();
+            try {
+              const decryptedName = data.name ? CryptoJS.AES.decrypt(data.name, process.env.NEXT_PUBLIC_ENCRYPTION_KEY || "NayakarsaSecureKey2026").toString(CryptoJS.enc.Utf8) : "";
+              const decryptedEmail = data.email ? CryptoJS.AES.decrypt(data.email, process.env.NEXT_PUBLIC_ENCRYPTION_KEY || "NayakarsaSecureKey2026").toString(CryptoJS.enc.Utf8) : "";
+              const decryptedRole = data.role ? CryptoJS.AES.decrypt(data.role, process.env.NEXT_PUBLIC_ENCRYPTION_KEY || "NayakarsaSecureKey2026").toString(CryptoJS.enc.Utf8) : "";
+              
+              setProfile({
+                name: decryptedName || data.name,
+                email: decryptedEmail || data.email,
+                role: decryptedRole || data.role || "Superadmin",
+                lastLogin: new Date().toLocaleString(),
+              });
+            } catch (e) {
+              setProfile({
+                name: data.name,
+                email: data.email,
+                role: data.role || "Superadmin",
+                lastLogin: new Date().toLocaleString(),
+              });
+            }
+          } else {
+            setProfile({
+              name: user.displayName || "Admin",
+              email: user.email,
+              role: "Superadmin",
+              lastLogin: new Date().toLocaleString(),
+            });
+          }
+        } catch (error) {
+          console.error("Error fetching profile:", error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    });
+    return () => unsub();
   }, []);
 
   return (
@@ -51,7 +73,7 @@ export default function PengaturanPage() {
           <p className="text-slate-400 mt-2 font-medium">Kelola informasi profil dan keamanan Anda.</p>
         </div>
         <div className="w-20 h-20 bg-blue-600 rounded-3xl flex items-center justify-center text-white text-3xl font-black shadow-xl shadow-blue-100">
-          A
+          {profile?.name?.charAt(0).toUpperCase() || "A"}
         </div>
       </div>
 
@@ -63,15 +85,15 @@ export default function PengaturanPage() {
         </div>
         <div className="p-10 grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="space-y-2">
-            <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Nama Lengkap</label>
+            <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Nama Lengkap</label>
             <p className="text-lg font-bold text-slate-700">{profile?.name || "..."}</p>
           </div>
           <div className="space-y-2">
-            <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Alamat Email</label>
+            <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Alamat Email</label>
             <p className="text-lg font-bold text-slate-700">{profile?.email || "..."}</p>
           </div>
           <div className="space-y-2">
-            <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Role</label>
+            <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Role</label>
             <div className="flex">
               <span className="bg-blue-50 text-blue-600 px-4 py-1 rounded-full text-xs font-black">
                 {profile?.role || "..." }
@@ -79,7 +101,7 @@ export default function PengaturanPage() {
             </div>
           </div>
           <div className="space-y-2">
-            <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Terakhir Login</label>
+            <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Terakhir Login</label>
             <p className="text-sm font-medium text-slate-500">{profile?.lastLogin || "..."}</p>
           </div>
         </div>

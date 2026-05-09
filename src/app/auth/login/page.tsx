@@ -45,32 +45,27 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-white">
-      {/* Left Side: Branding */}
-      <div className="hidden lg:flex w-1/2 bg-blue-600 relative overflow-hidden">
-        <img 
-          src="/images/auth-bg.png" 
-          alt="Auth Branding" 
-          className="absolute inset-0 w-full h-full object-cover opacity-80"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-blue-900/80 to-transparent" />
-        <div className="relative z-10 p-20 flex flex-col justify-end text-white h-full">
-          <div className="mb-8">
-             <div className="w-16 h-16 bg-white/20 backdrop-blur-xl rounded-3xl flex items-center justify-center text-4xl font-black mb-6">N</div>
-             <h1 className="text-6xl font-black tracking-tighter">Nayakarsa<br/>Superadmin</h1>
-             <p className="text-xl text-blue-100 mt-6 max-w-md font-medium leading-relaxed">
-               Command center cerdas untuk manajemen institusi pendidikan dan korporasi di seluruh Indonesia.
-             </p>
-          </div>
+    <div className="flex h-screen w-screen overflow-hidden bg-slate-50">
+      {/* Left Side: Text and Icon */}
+      <div className="hidden lg:flex w-1/2 bg-blue-950 flex-col justify-center text-white p-20 relative overflow-hidden">
+        <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-blue-900 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+        <div className="absolute top-20 right-20 w-64 h-64 bg-blue-800 rounded-full blur-3xl opacity-30 pointer-events-none"></div>
+        
+        <div className="relative z-10 w-full max-w-lg">
+          <div className="w-20 h-20 bg-white rounded-3xl flex items-center justify-center text-5xl font-black text-blue-950 mb-10 shadow-2xl">N</div>
+          <h1 className="text-6xl font-black tracking-tighter mb-6 leading-tight">Nayakarsa<br/>Superadmin</h1>
+          <p className="text-xl text-blue-200 font-medium leading-relaxed">
+            Command center cerdas untuk manajemen institusi pendidikan dan korporasi di seluruh Indonesia.
+          </p>
         </div>
       </div>
 
       {/* Right Side: Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
-        <div className="w-full max-w-md space-y-12">
-          <div className="space-y-4">
-            <h2 className="text-4xl font-black text-slate-800 tracking-tight">Selamat Datang</h2>
-            <p className="text-slate-400 font-medium">Masuk untuk mengelola Dashboard Anda.</p>
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 lg:p-24 overflow-y-auto bg-white">
+        <div className="w-full max-w-md space-y-8 my-auto">
+          <div className="space-y-2">
+            <h2 className="text-3xl font-black text-slate-800 tracking-tight">Login</h2>
+            <p className="text-slate-500 font-medium">Masuk ke Dashboard Superadmin</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">
@@ -98,24 +93,24 @@ export default function LoginPage() {
 
             <div className="flex items-center justify-between px-1">
               <label className="flex items-center gap-2 cursor-pointer group">
-                <input type="checkbox" className="w-4 h-4 rounded border-slate-200 text-blue-600 focus:ring-blue-500" />
+                <input type="checkbox" className="w-4 h-4 rounded border-slate-200 text-blue-900 focus:ring-blue-900" />
                 <span className="text-sm font-medium text-slate-500 group-hover:text-slate-700 transition">Ingat saya</span>
               </label>
-              <Link href="#" className="text-sm font-bold text-blue-600 hover:text-blue-700 transition">Lupa Password?</Link>
+              <Link href="#" className="text-sm font-bold text-blue-900 hover:text-blue-800 transition">Lupa Password?</Link>
             </div>
 
             <button 
               type="submit" 
               disabled={loading}
-              className="w-full bg-slate-900 text-white py-5 rounded-[1.5rem] font-bold text-lg hover:bg-blue-600 hover:shadow-2xl hover:shadow-blue-200 transition-all duration-500 active:scale-95 disabled:opacity-50"
+              className="w-full bg-blue-900 text-white py-5 rounded-[1.5rem] font-bold text-lg hover:bg-blue-800 hover:shadow-2xl hover:shadow-blue-200 transition-all duration-500 active:scale-95 disabled:opacity-50"
             >
               {loading ? "Menghubungkan..." : "Masuk Sekarang"}
             </button>
           </form>
 
-          <p className="text-center text-slate-400 font-medium pt-8">
+          <p className="text-center text-slate-500 font-medium pt-4">
             Belum punya akun? {" "}
-            <Link href="/auth/register" className="text-blue-600 font-bold hover:underline">Daftar Baru</Link>
+            <Link href="/auth/register" className="text-blue-900 font-bold hover:underline">Daftar Baru</Link>
           </p>
         </div>
       </div>
