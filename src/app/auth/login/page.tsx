@@ -61,54 +61,54 @@ export default function LoginPage() {
       </div>
 
       {/* Right Side: Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 lg:p-24 overflow-y-auto bg-white">
-        <div className="w-full max-w-md space-y-8 my-auto">
-          <div className="space-y-2">
-            <h2 className="text-3xl font-black text-slate-800 tracking-tight">Login</h2>
-            <p className="text-slate-500 font-medium">Masuk ke Dashboard Superadmin</p>
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 lg:p-24 overflow-hidden bg-white">
+        <div className="w-full max-w-md space-y-6 lg:space-y-8 my-auto">
+          <div className="space-y-1 sm:space-y-2">
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-800 tracking-tight">Login</h2>
+            <p className="text-sm sm:text-base text-slate-500 font-medium">Masuk ke Dashboard Superadmin</p>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Email Address</label>
+          <form onSubmit={handleLogin} className="space-y-4 sm:space-y-6">
+            <div className="space-y-1 sm:space-y-2">
+              <label className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Email Address</label>
               <input 
                 name="email" 
                 type="email" 
                 required 
                 placeholder="admin@nayakarsa.com"
-                className="w-full px-6 py-4 rounded-[1.5rem] bg-slate-50 border border-slate-100 focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-400 outline-none transition-all duration-300"
+                className="w-full px-5 sm:px-6 py-3 sm:py-4 rounded-[1.5rem] bg-slate-50 border border-slate-100 focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-400 outline-none transition-all duration-300 text-sm sm:text-base"
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Password</label>
+            <div className="space-y-1 sm:space-y-2">
+              <label className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Password</label>
               <input 
                 name="password" 
                 type="password" 
                 required 
                 placeholder="••••••••"
-                className="w-full px-6 py-4 rounded-[1.5rem] bg-slate-50 border border-slate-100 focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-400 outline-none transition-all duration-300"
+                className="w-full px-5 sm:px-6 py-3 sm:py-4 rounded-[1.5rem] bg-slate-50 border border-slate-100 focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-400 outline-none transition-all duration-300 text-sm sm:text-base"
               />
             </div>
 
             <div className="flex items-center justify-between px-1">
               <label className="flex items-center gap-2 cursor-pointer group">
                 <input type="checkbox" className="w-4 h-4 rounded border-slate-200 text-blue-900 focus:ring-blue-900" />
-                <span className="text-sm font-medium text-slate-500 group-hover:text-slate-700 transition">Ingat saya</span>
+                <span className="text-[11px] sm:text-sm font-medium text-slate-500 group-hover:text-slate-700 transition">Ingat saya</span>
               </label>
-              <Link href="#" className="text-sm font-bold text-blue-900 hover:text-blue-800 transition">Lupa Password?</Link>
+              <Link href="#" className="text-[11px] sm:text-sm font-bold text-blue-900 hover:text-blue-800 transition">Lupa Password?</Link>
             </div>
 
             <button 
               type="submit" 
               disabled={loading}
-              className="w-full bg-blue-900 text-white py-5 rounded-[1.5rem] font-bold text-lg hover:bg-blue-800 hover:shadow-2xl hover:shadow-blue-200 transition-all duration-500 active:scale-95 disabled:opacity-50"
+              className="w-full bg-blue-900 text-white py-4 sm:py-5 rounded-[1.5rem] font-bold text-base sm:text-lg hover:bg-blue-800 hover:shadow-2xl hover:shadow-blue-200 transition-all duration-500 active:scale-95 disabled:opacity-50"
             >
               {loading ? "Menghubungkan..." : "Masuk Sekarang"}
             </button>
           </form>
 
-          <p className="text-center text-slate-500 font-medium pt-4">
+          <p className="text-center text-sm sm:text-base text-slate-500 font-medium pt-2 sm:pt-4">
             Belum punya akun? {" "}
             <Link href="/auth/register" className="text-blue-900 font-bold hover:underline">Daftar Baru</Link>
           </p>

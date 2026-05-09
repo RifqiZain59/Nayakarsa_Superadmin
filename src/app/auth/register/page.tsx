@@ -83,48 +83,48 @@ export default function RegisterPage() {
       </div>
 
       {/* Right Side: Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 lg:p-24 overflow-y-auto bg-white">
-        <div className="w-full max-w-md space-y-8 my-auto">
-          <div className="space-y-2">
-            <h2 className="text-3xl font-black text-slate-800 tracking-tight">Register</h2>
-            <p className="text-slate-500 font-medium">Daftar Akun Superadmin</p>
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 lg:p-24 overflow-hidden bg-white">
+        <div className="w-full max-w-md space-y-4 sm:space-y-6 lg:space-y-8 my-auto">
+          <div className="space-y-1 sm:space-y-2">
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-800 tracking-tight">Register</h2>
+            <p className="text-sm sm:text-base text-slate-500 font-medium">Daftar Akun Superadmin</p>
           </div>
 
-          <form onSubmit={handleRegister} className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Full Name</label>
+          <form onSubmit={handleRegister} className="space-y-4 sm:space-y-6">
+            <div className="space-y-1 sm:space-y-2">
+              <label className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Full Name</label>
               <input 
                 name="name" 
                 required 
                 placeholder="Artano Nayakarsa"
-                className="w-full px-6 py-4 rounded-[1.5rem] bg-slate-50 border border-slate-100 focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-400 outline-none transition-all duration-300"
+                className="w-full px-5 sm:px-6 py-3 sm:py-4 rounded-[1.5rem] bg-slate-50 border border-slate-100 focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-400 outline-none transition-all duration-300 text-sm sm:text-base"
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Email Address</label>
+            <div className="space-y-1 sm:space-y-2">
+              <label className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Email Address</label>
               <input 
                 name="email" 
                 type="email" 
                 required 
                 placeholder="admin@nayakarsa.com"
-                className="w-full px-6 py-4 rounded-[1.5rem] bg-slate-50 border border-slate-100 focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-400 outline-none transition-all duration-300"
+                className="w-full px-5 sm:px-6 py-3 sm:py-4 rounded-[1.5rem] bg-slate-50 border border-slate-100 focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-400 outline-none transition-all duration-300 text-sm sm:text-base"
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Password</label>
+            <div className="space-y-1 sm:space-y-2">
+              <label className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Password</label>
               <input 
                 name="password" 
                 type="password" 
                 required 
                 placeholder="••••••••"
-                className="w-full px-6 py-4 rounded-[1.5rem] bg-slate-50 border border-slate-100 focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-400 outline-none transition-all duration-300"
+                className="w-full px-5 sm:px-6 py-3 sm:py-4 rounded-[1.5rem] bg-slate-50 border border-slate-100 focus:bg-white focus:ring-4 focus:ring-blue-100 focus:border-blue-400 outline-none transition-all duration-300 text-sm sm:text-base"
               />
             </div>
 
-            <div className="px-1 py-2">
-              <p className="text-xs text-slate-400 leading-relaxed text-center">
+            <div className="px-1 py-1 sm:py-2">
+              <p className="text-[10px] sm:text-xs text-slate-400 leading-relaxed text-center">
                 Dengan mendaftar, Anda menyetujui <Link href="#" className="text-blue-900 font-bold hover:underline">Syarat & Ketentuan</Link> serta <Link href="#" className="text-blue-900 font-bold hover:underline">Kebijakan Privasi</Link> kami.
               </p>
             </div>
@@ -132,13 +132,13 @@ export default function RegisterPage() {
             <button 
               type="submit" 
               disabled={loading}
-              className="w-full bg-blue-900 text-white py-5 rounded-[1.5rem] font-bold text-lg hover:bg-blue-800 hover:shadow-2xl hover:shadow-blue-200 transition-all duration-500 active:scale-95 disabled:opacity-50"
+              className="w-full bg-blue-900 text-white py-4 sm:py-5 rounded-[1.5rem] font-bold text-base sm:text-lg hover:bg-blue-800 hover:shadow-2xl hover:shadow-blue-200 transition-all duration-500 active:scale-95 disabled:opacity-50"
             >
               {loading ? "Memproses Data..." : "Daftar Akun Sekarang"}
             </button>
           </form>
 
-          <p className="text-center text-slate-500 font-medium pt-4">
+          <p className="text-center text-sm sm:text-base text-slate-500 font-medium pt-2 sm:pt-4">
             Sudah punya akun? {" "}
             <Link href="/auth/login" className="text-blue-900 font-bold hover:underline">Masuk Disini</Link>
           </p>

@@ -20,6 +20,7 @@ export default function PengaturanPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!auth) return;
     const unsub = onAuthStateChanged(auth, async (user) => {
       if (user && user.email) {
         const emailHash = await sha256(user.email);
