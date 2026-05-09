@@ -19,6 +19,9 @@ export default function LoginPage() {
     const password = formData.get("password") as string;
 
     try {
+      if (!auth) {
+        throw new Error("Koneksi ke server gagal. Konfigurasi Firebase (Environment Variables) di Vercel belum disetel atau kosong. Harap isi di menu Settings Vercel.");
+      }
       await signInWithEmailAndPassword(auth, email, password);
       
       Swal.fire({

@@ -25,6 +25,9 @@ export default function RegisterPage() {
     const password = formData.get("password") as string;
 
     try {
+      if (!auth || !db) {
+        throw new Error("Koneksi ke server gagal. Konfigurasi Firebase (Environment Variables) di Vercel belum disetel atau kosong. Harap isi di menu Settings Vercel.");
+      }
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const uid = userCredential.user.uid;
       const emailHash = await sha256(email);
